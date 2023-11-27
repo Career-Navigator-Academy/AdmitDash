@@ -13,6 +13,14 @@ class BaseConfig:
     DEBUG = False
     HOST = get_config("HOST", required=True)
     PORT = get_config("PORT", required=True)
+    MYSQL_DATABASE = get_config("MYSQL_DATABASE", required=True)
+    MYSQL_USER = get_config("MYSQL_USER", required=True)
+    MYSQL_PASSWORD = get_config("MYSQL_PASSWORD", required=True)
+    MYSQL_HOST = get_config("MYSQL_HOST", required=True)
+    SQLALCHEMY_DATABASE_URI = (
+        f"mysql://{MYSQL_USER}:{MYSQL_PASSWORD}@{MYSQL_HOST}/{MYSQL_DATABASE}"
+    )
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 
 # pylint: disable=too-few-public-methods
