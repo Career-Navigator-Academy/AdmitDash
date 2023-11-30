@@ -1,40 +1,28 @@
-"""Initialize the Flask application and Database.
+"""Initialize the Flask application.
 
-This module contains functions and objects to manage Flask app creation 
-and database initialization.
+This module contains functions and objects to manage Flask app creation.
 
 Functions:
     create_app: Factory function to create and configure a Flask app instance 
         based on the specified environment.
     
-Objects:
-    db: SQLAlchemy object used for managing the database.
-
 Example:
     To create the Flask app instance:
-    >>> from app import create_app, db
+    >>> from app import create_app
     >>> app = create_app()
 """
 
 from logging import getLogger
 from typing import Optional
 from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy.orm import DeclarativeBase
 from sqlalchemy_utils import database_exists, create_database
 
-from app.config import app_config
-from app.views import views_blueprint
-from app.api import v1_blueprint
+from .config import app_config
+from .routes import v1
+from .models import db
+from . import views
 
 logger = getLogger(__name__)
-
-
-class Base(DeclarativeBase):
-    pass
-
-
-db = SQLAlchemy(model_class=Base)
 
 
 def create_app(environment: Optional[str] = "development") -> Flask:
@@ -51,8 +39,8 @@ def create_app(environment: Optional[str] = "development") -> Flask:
     app = Flask(__name__)
     app.config.from_object(app_config[environment])
 
-    app.register_blueprint(views_blueprint)
-    app.register_blueprint(v1_blueprint, url_prefix="/v1")
+    app.register_blueprint(views.blueprint)
+    app.register_blueprint(v1.blueprint, url_prefix="/v1")
 
     logger.debug("%s configurations loaded successfully.", environment.capitalize())
 

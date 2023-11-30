@@ -24,9 +24,7 @@ Example:
 """
 
 from sqlalchemy.sql import func
-from app import db
-
-print("lolllll")
+from . import db
 
 
 # pylint: disable=too-few-public-methods

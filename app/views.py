@@ -14,17 +14,28 @@ Routes:
 Each route corresponds to a specific page view or form submission related to candidate management.
 """
 
+import requests
 from flask import Blueprint, render_template, redirect, url_for, flash
-from app.api import v1
+from werkzeug.exceptions import InternalServerError
 
-views_blueprint = Blueprint("views", __name__)
+blueprint = Blueprint("views", __name__)
 
 
-@views_blueprint.route("/candidates", methods=["GET"])
+@blueprint.route("/candidates", methods=["GET"])
 def list_candidates():
     """Render a page listing all candidates."""
-    candidates = v1.get_all()
-    return render_template("candidates_list.html", candidates=candidates)
+    try:
+        response = requests.get(url_for("v1.get_all", _external=True))
+        response.raise_for_status()
+        candidates = response.json()
+
+        return render_template("candidates_list.html", candidates=candidates)
+
+    except requests.RequestException as e:
+        print(e)
+        error_message = "Oops! Something went wrong. Please try again later. If this issue persists, please contact support."
+        flash(error_message, "error")
+        return render_template("candidates_list.html", candidates=[])
 
 
 # @views_blueprint.route("/candidates/<int:candidate_id>", methods=["GET"])

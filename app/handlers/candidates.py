@@ -38,10 +38,11 @@ from typing import Optional, Dict, Any, List
 import logging
 from werkzeug.exceptions import Conflict, InternalServerError
 from sqlalchemy.exc import SQLAlchemyError
-from app.models.candidates import Candidate
-from app import db
+from app.models import candidates, db
 
 logger = logging.getLogger(__name__)
+
+Candidate = candidates.Candidate
 
 
 def create_candidate(

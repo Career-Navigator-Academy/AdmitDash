@@ -13,9 +13,12 @@ from app import create_app
 
 basicConfig(level=DEBUG)
 
-if __name__ == "__main__":
-    app = create_app()
+app = create_app()
 
-    host = app.config["HOST"]
-    port = app.config["PORT"]
+host = app.config["HOST"]
+port = app.config["PORT"]
+
+print(app.config["SECRET_KEY"])
+
+if __name__ == "__main__":
     app.run(host=host, port=port)
