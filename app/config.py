@@ -10,7 +10,6 @@ logger = getLogger(__name__)
 class BaseConfig:
     """Base configuration settings"""
 
-    DEBUG = False
     HOST = get_config("HOST", required=True)
     PORT = get_config("PORT", required=True)
     PORT = get_config("PORT", required=True)
@@ -25,6 +24,7 @@ class BaseConfig:
     SECRET_KEY = get_config(
         "SECRET_KEY", default_value=generate_md5_hash(generate_random_string(15))
     )
+    SESSION_COOKIE_HTTPONLY = True
 
 
 # pylint: disable=too-few-public-methods
@@ -32,11 +32,16 @@ class DevelopmentConfig(BaseConfig):
     """Settings for the development environment"""
 
     DEBUG = True
+    SESSION_COOKIE_SAMESITE = "Lax"
 
 
 # pylint: disable=too-few-public-methods
 class ProductionConfig(BaseConfig):
     """Settings for the production environment"""
+
+    DEBUG = False
+    SESSION_COOKIE_SECURE = True
+    SESSION_COOKIE_SAMESITE = "Lax"
 
 
 app_config = {"development": DevelopmentConfig, "production": ProductionConfig}
